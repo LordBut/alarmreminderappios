@@ -1,0 +1,94 @@
+workflows:
+  ios-testflight:
+    # Friendly name shown in Codemagic UI
+    name: Build iOS (IPA) and upload to TestFlight
+
+    # Select the macOS machine and Flutter version
+    machine:
+      # macOS images are managed by Codemagic; you can choose default or a specific image
+      type: mac-mini-xcode-15 # change if you need a different Xcode version
+      # optionally increase resources:
+      # xcode: "15.2"
+      # ram: 8g
+
+    environment:
+      flutter: stable               # Use Flutter stable channel
+      vars:
+        # Required settings you should populate in Codemagic UI (see instructions below)
+        APP_ID:                                 # e.g. com.yourcompany.genevolut
+        APP_NAME: "Genevolut"
+        # App Store Connect API key variables. See below how to add them securely to Codemagic.
+        APP_STORE_CONNECT_KEY_ID:              # e.g. 2AB3CD45EF
+        APP_STORE_CONNECT_ISSUER_ID:           # e.g. 00000000-0000-0000-0000-000000000000
+        # Provide the base64 encoding of the .p8 file (PRIVATE_KEY_BASE64) or add the file in Codemagic UI
+        APP_STORE_CONNECT_PRIVATE_KEY_BASE64:  # base64 of the p8 file content
+        # Optional: set to "true" to auto-publish to TestFlight after successful build
+        AUTO_PUBLISH_TO_TESTFLIGHT: "true"
+
+      # Flutter build cache + CocoaPods cache for faster builds
+      cache:
+        cache_paths:
+          - $HOME/.pub-cache
+          - ios/Pods
+
+    scripts:
+      - name: Checkout code (already done by Codemagic)
+        script: |
+          echo "Workspace: $CM_WORKING_DIRECTORY"
+      - name: Flutter pub get
+        script: |
+          flutter pub get
+      - name: Ensure CocoaPods and prepare iOS dependencies
+        script: |
+          # Ensure CocoaPods installed (brew may already be present on mac images)
+          brew install cocoapods || true
+          cd ios || exit 1
+          pod repo update || true
+          pod install --repo-update || true
+          cd ..
+      - name: Run analyzer & (optional) tests
+        script: |
+          flutter analyze || true   # don't fail the whole build if analyzer warns
+          # flutter test            # uncomment if you want tests to run and fail build on fail
+      - name: Increment build number (optional)
+        script: |
+          # Example: set build number to CI build id or timestamp
+          BUILD_NUMBER=${CM_BUILD_ID:-$(date +%s)}
+          echo "Setting build number to $BUILD_NUMBER"
+          /Applications/flutter/bin/cache/dart-sdk/bin/dart run build_runner help >/dev/null 2>&1 || true
+          # Use agvtool only if Xcode project uses it, otherwise manage CFBundleVersion in Xcode project.
+      - name: Build IPA (signed using App Store Connect API key)
+        script: |
+          # Ensure the bundle identifier in ios/Runner.xcodeproj/ project settings matches $APP_ID
+          echo "Building iOS IPA (this will use codesigning set by Codemagic signing settings)..."
+          # flutter build ipa will use Xcode and codesign using the profiles uploaded to Codemagic or App Store Connect API key
+          flutter build ipa --flavor production --release --export-options-plist=ios/ExportOptions.plist || flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+      - name: Collect artifact paths
+        script: |
+          echo "Artifacts should be in build/ios/ipa/"
+          ls -la build/ios/ipa || true
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/ios/ipa/*.dsym.zip
+      - build/**/app.dSYM.zip
+
+    # Signing: prefer App Store Connect API key approach (recommended)
+    publishing:
+      app_store_connect:
+        # This publisher uploads the IPA to TestFlight (App Store Connect)
+        # The credentials below are read from environment variables configured in Codemagic UI.
+        auth_type: api_key
+        api_key:
+          key_id: ${APP_STORE_CONNECT_KEY_ID}
+          issuer_id: ${APP_STORE_CONNECT_ISSUER_ID}
+          # private_key_base64 should be the base64-encoded contents of the .p8 file
+          private_key_base64: ${APP_STORE_CONNECT_PRIVATE_KEY_BASE64}
+        # The bundle identifier for the app
+        bundle_id: ${APP_ID}
+        team_name: ""                 # optional; specify if you have multiple teams
+        app_name: ${APP_NAME}
+        upload:
+          testflight: ${AUTO_PUBLISH_TO_TESTFLIGHT}
+
+    # Notifications (optional): Codemagic can notify on Slack/email — configured in UI
