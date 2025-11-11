@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "1024647573688",
+    "project_id": "alarmreminderapp-18fa2",
+    "storage_bucket": "alarmreminderapp-18fa2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024647573688:android:9e28552902cb4dc16b844d",
+        "android_client_info": {
+          "package_name": "com.alarmreminderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024647573688-j0jlj4f2flab3psh1gobal77dp0tc8er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alarmreminderapp",
+            "certificate_hash": "af5d90c9af93e906714ac5d9b62ec790b96c67c1"
+          }
+        },
+        {
+          "client_id": "1024647573688-233cr7l8vsoe28konijvka4rveg067lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3g2K3_arGO1nQl9AZM_XFBdf_j9Txg8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024647573688-233cr7l8vsoe28konijvka4rveg067lt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024647573688:android:7b9d7aee88a33b4e6b844d",
+        "android_client_info": {
+          "package_name": "com.example.alarmreminderappios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024647573688-233cr7l8vsoe28konijvka4rveg067lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3g2K3_arGO1nQl9AZM_XFBdf_j9Txg8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024647573688-233cr7l8vsoe28konijvka4rveg067lt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

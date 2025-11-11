@@ -1,0 +1,58 @@
+name: alarmreminderappios
+description: "Genevolut – A cross-platform app for scheduling reminders and sharing accomplishments."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Material Design
+  cupertino_icons: ^1.0.8
+
+  # --- Firebase Core & Services ---
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.6.0
+  cloud_firestore: ^4.8.0
+  firebase_storage: ^11.2.0
+  firebase_messaging: ^14.6.0
+
+  # --- Notifications and Scheduling ---
+  flutter_local_notifications: ^17.1.2
+  timezone: ^0.9.2
+
+  # --- In-App Purchases / Subscriptions ---
+  # Let Flutter determine compatible version automatically
+  in_app_purchase:
+
+  # --- Image / Video Picker (for profile & accomplishments uploads) ---
+  image_picker: ^0.8.7+4
+  path_provider: ^2.0.14
+
+  # --- State Management ---
+  provider: ^6.0.5
+
+  # --- Localization Support ---
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Example assets section
+  # assets:
+  #   - assets/images/
+  #
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: fonts/Inter-Regular.ttf
