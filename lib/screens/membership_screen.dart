@@ -68,7 +68,7 @@ class _MembershipScreenState extends State<MembershipScreen> {
                 ),
               ),
             );
-          }).toList()
+          })
         ],
       ),
     );
